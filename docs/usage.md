@@ -1,151 +1,108 @@
-# Installation Guide
+# installation guide
 
-This guide explains how to install prebuilt dlib wheels for Linux systems.
+how to install prebuilt dlib wheels for linux.
 
-## Quick Installation
+## quick install
 
-### Method 1: Direct Download from Repository
+### direct download from repo
 
-Download the Python 3.12 wheel directly from the repository root:
+grab the python 3.12 wheel directly from the repo:
 
 ```bash
-# For x86_64 systems
+# x86_64
 wget https://raw.githubusercontent.com/EqualByte/Dlib_linux_python_3.x/main/dlib-19.24-cp312-cp312-linux_x86_64.whl
 pip install dlib-19.24-cp312-cp312-linux_x86_64.whl
 
-# For aarch64 systems
+# aarch64
 wget https://raw.githubusercontent.com/EqualByte/Dlib_linux_python_3.x/main/dlib-19.24-cp312-cp312-linux_aarch64.whl
 pip install dlib-19.24-cp312-cp312-linux_aarch64.whl
-```
+````
 
-### Method 2: Using the Installation Script
+### installation script
 
-Use our automated installation script:
+use the automated installer:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/EqualByte/Dlib_linux_python_3.x/main/scripts/install_wheel.sh | bash
 ```
 
-### Method 3: From Releases
+### from releases
 
-Download from the releases page for specific Python versions:
+for other python versions, download from releases:
 
 ```bash
-# Example for Python 3.9 on x86_64
+# python 3.9 x86_64 example
 pip install https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp39-cp39-linux_x86_64.whl
 ```
 
-## Supported Platforms
+## supported platforms
 
-| Architecture | Python Versions | OS |
-|-------------|----------------|-----|
-| x86_64 | 3.7 - 3.14 | Linux |
-| aarch64 | 3.7 - 3.14 | Linux |
+| architecture | python versions | os    |
+| ------------ | --------------- | ----- |
+| x86_64       | 3.11 - 3.14     | linux |
+| aarch64      | 3.11 - 3.14     | linux |
 
-## System Requirements
+## system requirements
 
-Before installing dlib, ensure you have the required system dependencies:
+make sure your system has the necessary dependencies.
 
-### Ubuntu/Debian
+### ubuntu/debian
+
 ```bash
 sudo apt-get update
 sudo apt-get install -y \
-  libboost-all-dev \
-  libopenblas-dev \
-  liblapack-dev \
-  libx11-dev \
-  libgtk-3-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libswscale-dev \
-  libv4l-dev \
-  libxvidcore-dev \
-  libx264-dev \
-  libjpeg-dev \
-  libpng-dev \
-  libtiff-dev \
-  libatlas-base-dev
+  libboost-all-dev libopenblas-dev liblapack-dev libx11-dev libgtk-3-dev \
+  libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev \
+  libx264-dev libjpeg-dev libpng-dev libtiff-dev libatlas-base-dev
 ```
 
-### CentOS/RHEL/Fedora
+### centos/rhel/fedora
+
 ```bash
 sudo yum install -y \
-  boost-devel \
-  openblas-devel \
-  lapack-devel \
-  libX11-devel \
-  gtk3-devel \
-  ffmpeg-devel \
-  libjpeg-turbo-devel \
-  libpng-devel \
-  libtiff-devel \
-  atlas-devel
+  boost-devel openblas-devel lapack-devel libX11-devel gtk3-devel \
+  ffmpeg-devel libjpeg-turbo-devel libpng-devel libtiff-devel atlas-devel
 ```
 
-### Alpine Linux
+### alpine
+
 ```bash
 sudo apk add --no-cache \
-  boost-dev \
-  openblas-dev \
-  lapack-dev \
-  libx11-dev \
-  gtk+3.0-dev \
-  ffmpeg-dev \
-  libjpeg-turbo-dev \
-  libpng-dev \
-  tiff-dev
+  boost-dev openblas-dev lapack-dev libx11-dev gtk+3.0-dev \
+  ffmpeg-dev libjpeg-turbo-dev libpng-dev tiff-dev
 ```
 
-## Verification
-
-After installation, verify that dlib is working correctly:
+## verify installation
 
 ```python
 import dlib
-print(f"dlib version: {dlib.__version__}")
+print("dlib version:", dlib.__version__)
 
-# Test face detection
 detector = dlib.get_frontal_face_detector()
-print("✓ dlib installed successfully!")
+print("dlib installed successfully")
 ```
 
-## Troubleshooting
+## troubleshooting
 
-### Import Errors
-- Ensure all system dependencies are installed
-- Reinstall the wheel after installing dependencies
-- Check that your Python version matches the wheel
+* **import errors**: make sure system dependencies are installed, reinstall wheel if needed
+* **architecture mismatch**: check `uname -m` and download correct wheel
+* **python version mismatch**: check `python --version` matches the wheel
 
-### Architecture Mismatch
-Check your system architecture:
-```bash
-uname -m
-```
-Make sure to download the wheel for your architecture (x86_64 or aarch64).
+common errors:
 
-### Python Version Mismatch
-Check your Python version:
-```bash
-python --version
-```
-Download the wheel that matches your Python version.
+* `no module named 'dlib'`: install system dependencies first
+* `importerror: libboost_python`: install boost development libraries
+* `undefined symbol`: wrong architecture, download correct wheel
 
-### Common Issues
+## examples
 
-1. **"No module named 'dlib'"**: Install system dependencies first
-2. **"ImportError: libboost_python"**: Install boost development libraries
-3. **"undefined symbol"**: Architecture mismatch - download correct wheel
+see `examples/` for working demos:
 
-## Examples
+* `basic_face_detection.py` - simple face detection example
 
-See the `examples/` directory for working code samples:
+## build from source
 
-- `basic_face_detection.py` - Simple face detection demo
-- More examples coming soon...
-
-## Building from Source
-
-If you need a custom build or the prebuilt wheels don't work:
+if prebuilt wheels don’t work or you need custom build:
 
 ```bash
 sudo apt-get install -y build-essential cmake libboost-all-dev
@@ -155,8 +112,8 @@ python setup.py build
 python setup.py install
 ```
 
-## Support
+## support
 
-- Issues: [GitHub Issues](https://github.com/EqualByte/Dlib_linux_python_3.x/issues)
-- Documentation: [dlib.net](http://dlib.net/)
-- Original dlib: [davisking/dlib](https://github.com/davisking/dlib)
+* issues: [github issues](https://github.com/EqualByte/Dlib_linux_python_3.x/issues)
+* documentation: [dlib.net](http://dlib.net/)
+* original repo: [davisking/dlib](https://github.com/davisking/dlib)
