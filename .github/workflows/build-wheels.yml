@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12']
     timeout-minutes: 60
 
     steps:
@@ -109,10 +109,6 @@ jobs:
                 PYBIN=/opt/python/cp311-cp311/bin
               elif [ \"\$PYTHON_VERSION\" = \"3.12\" ]; then
                 PYBIN=/opt/python/cp312-cp312/bin
-              elif [ \"\$PYTHON_VERSION\" = \"3.13\" ]; then
-                PYBIN=/opt/python/cp313-cp313/bin
-              elif [ \"\$PYTHON_VERSION\" = \"3.14\" ]; then
-                PYBIN=/opt/python/cp314-cp314/bin
               fi
               
               \$PYBIN/pip install --upgrade pip wheel setuptools
