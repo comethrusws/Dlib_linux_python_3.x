@@ -7,7 +7,10 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-*.whl
+# Ignore all wheels except Python 3.12 ones (which are committed to repo root)
+dlib-19.24-cp311-cp311-linux_*.whl
+dlib-19.24-cp313-cp313-linux_*.whl
+dlib-19.24-cp314-cp314-linux_*.whl
 *.tar.gz
 
 # Virtual environments
@@ -51,3 +54,6 @@ logs/
 *.tmp
 *.temp
 .cache/
+
+# Note: Python 3.12 wheels are intentionally committed to repo root for direct download
+# These are added by CI workflow and should not be ignored
