@@ -35,7 +35,7 @@ jobs:
       - name: Install Python build tools
         run: |
           python -m pip install --upgrade pip
-          pip install wheel setuptools auditwheel
+          pip install build wheel setuptools auditwheel
 
       - name: Clone dlib
         run: |
@@ -57,12 +57,8 @@ jobs:
         run: |
           cd dlib_src
           mkdir -p dist_repaired/
-          if [ -f dist/*.whl ]; then
-            auditwheel repair dist/*.whl -w dist_repaired/ || cp dist/*.whl dist_repaired/
-          else
-            echo "No wheel found to repair"
-            exit 1
-          fi
+          # auditwheel may fail on ubuntu-latest, so fallback to copy
+          auditwheel repair dist/*.whl -w dist_repaired/ || cp dist/*.whl dist_repaired/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -76,7 +72,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12']
     timeout-minutes: 90
 
     steps:
@@ -94,7 +90,7 @@ jobs:
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
             quay.io/pypa/manylinux2014_aarch64 \
-            bash -c "
+            bash -c '
               export PYTHON_VERSION=${{ matrix.python-version }}
               
               # Install system dependencies
@@ -104,37 +100,35 @@ jobs:
                 libpng-devel libjpeg-devel libtiff-devel git \
                 gcc gcc-c++ make atlas-devel
               
-              # Set up Python
-              if [ \"\$PYTHON_VERSION\" = \"3.11\" ]; then
+              # Set up Python based on version
+              if [ "$PYTHON_VERSION" = "3.11" ]; then
                 PYBIN=/opt/python/cp311-cp311/bin
-              elif [ \"\$PYTHON_VERSION\" = \"3.12\" ]; then
+              elif [ "$PYTHON_VERSION" = "3.12" ]; then
                 PYBIN=/opt/python/cp312-cp312/bin
+              else
+                echo "Unsupported Python version: $PYTHON_VERSION"
+                exit 1
               fi
               
-              \$PYBIN/pip install --upgrade pip wheel setuptools
+              $PYBIN/pip install --upgrade pip wheel setuptools auditwheel
               
               # Clone and build dlib
               git clone --depth 1 --branch v19.24 https://github.com/davisking/dlib.git dlib_src
               cd dlib_src
               
-              # Use cmake3 if available
-              CMAKE_CMD=cmake3
-              if ! command -v cmake3 &> /dev/null; then
-                CMAKE_CMD=cmake
-              fi
-              export CMAKE_EXECUTABLE=\$CMAKE_CMD
+              # Build wheel
+              $PYBIN/python setup.py bdist_wheel
               
-              \$PYBIN/python setup.py bdist_wheel
-              
-              # Create output directory and repair wheel if it exists
+              # Create output directory and repair wheel
               mkdir -p /workspace/dist_final/
               if [ -f dist/*.whl ]; then
-                auditwheel repair dist/*.whl -w /workspace/dist_final/
+                $PYBIN/auditwheel repair dist/*.whl -w /workspace/dist_final/
               else
-                echo \"No wheel found to repair\"
+                echo "No wheel found to repair"
+                ls -la dist/
                 exit 1
               fi
-            "
+            '
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -168,15 +162,13 @@ jobs:
         with:
           name: Release ${{ github.ref_name }}
           body: |
-            Prebuilt dlib wheels for Linux (x86_64 and aarch64) on Python 3.11, 3.12, 3.13, and 3.14
+            Prebuilt dlib wheels for Linux (x86_64 and aarch64) on Python 3.11 and 3.12
             
             **Installation:**
-            ```bash
             pip install dlib-*.whl
-            ```
             
             Choose the wheel that matches your:
-            - Python version (cp311, cp312, cp313, or cp314)
+            - Python version (cp311 or cp312)
             - Architecture (x86_64 or aarch64)
           files: wheels/*.whl
           draft: false
