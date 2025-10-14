@@ -1,4 +1,4 @@
-name: Build and Release dlib Wheels
+name: Build and Release dlib Wheels  with cibuildwheel
 
 on:
   push:
@@ -35,10 +35,7 @@ jobs:
           CIBW_BEFORE_ALL_LINUX: >
             yum install -y cmake3 boost-devel openblas-devel lapack-devel 
             libX11-devel gtk3-devel libpng-devel libjpeg-devel 
-            libtiff-devel atlas-devel gcc gcc-c++ make || 
-            apt-get update && apt-get install -y cmake libboost-dev 
-            libopenblas-dev liblapack-dev libx11-dev libgtk-3-dev 
-            libjpeg-dev libpng-dev libtiff-dev libatlas-base-dev
+            libtiff-devel atlas-devel gcc gcc-c++ make
           CIBW_ENVIRONMENT: "CXXFLAGS='-O2 -g0'"
           
       - name: Upload artifacts
