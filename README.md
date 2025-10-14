@@ -1,37 +1,43 @@
-# dlib Linux Python Wheels
+## dlib linux python wheels
 
-Pre-built Python wheels for the dlib machine learning library on Linux systems. This repository provides ready-to-install wheels for multiple Python versions and architectures, eliminating the need for complex compilation from source.
+prebuilt python wheels for the dlib library on linux. fast installs. zero drama.
 
-## What is dlib?
+### what is dlib
 
-dlib is a modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++ to solve real world problems. The Python bindings provide access to computer vision, machine learning, and data analysis capabilities without requiring C++ knowledge.
+dlib is a modern c++ toolkit with machine learning and computer vision tools. the python bindings let you use it without touching c++.
 
-## Quick Installation
+### supported platforms
 
-Download the appropriate wheel for your system from the [Releases](https://github.com/EqualByte/Dlib_linux_python_3.x/releases) page and install:
+- **architectures**: x86_64, aarch64
+- **python versions**: 3.7 to 3.14
+- **os**: linux
+
+### quick start
+
+download a wheel from the releases page and install it with pip.
 
 ```bash
-# For Python 3.9 on x86_64
+# python 3.9 on x86_64
 pip install dlib-19.24-cp39-cp39-linux_x86_64.whl
 
-# For Python 3.10 on aarch64
+# python 3.10 on aarch64
 pip install dlib-19.24-cp310-cp310-linux_aarch64.whl
 
-# For Python 3.11 on x86_64
+# python 3.11 on x86_64
 pip install dlib-19.24-cp311-cp311-linux_x86_64.whl
 ```
 
-## Supported Platforms
+to install straight from a release url:
 
-- **Architectures**: x86_64, aarch64
-- **Python Versions**: 3.9, 3.10, 3.11
-- **Operating System**: Linux
+```bash
+pip install https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp39-cp39-linux_x86_64.whl
+```
 
-## System Requirements
+### system requirements
 
-Before installing dlib wheels, ensure your system has the following runtime dependencies:
+install these runtime deps before installing the wheel.
 
-### Ubuntu/Debian
+#### ubuntu/debian
 ```bash
 sudo apt-get update
 sudo apt-get install -y \
@@ -52,7 +58,7 @@ sudo apt-get install -y \
   libatlas-base-dev
 ```
 
-### CentOS/RHEL/Fedora
+#### centos/rhel/fedora
 ```bash
 sudo yum install -y \
   boost-devel \
@@ -67,79 +73,55 @@ sudo yum install -y \
   atlas-devel
 ```
 
-## Installation Methods
-
-### Method 1: Direct Wheel Installation
-1. Visit the [Releases](https://github.com/EqualByte/Dlib_linux_python_3.x/releases) page
-2. Download the wheel matching your Python version and architecture
-3. Install using pip:
-   ```bash
-   pip install dlib-*-linux-*.whl
-   ```
-
-### Method 2: Using pip with GitHub Releases
-```bash
-pip install https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp39-cp39-linux_x86_64.whl
-```
-
-## Verification
-
-After installation, verify dlib is working correctly:
+### verify the install
 
 ```python
 import dlib
 print(f"dlib version: {dlib.__version__}")
 
-# Test basic functionality
 detector = dlib.get_frontal_face_detector()
-print("dlib installed successfully!")
+print("dlib installed correctly")
 ```
 
-## Building from Source
+### troubleshooting
 
-If you need to build dlib from source instead of using pre-built wheels:
+- **import errors**: install the runtime deps above, then reinstall the wheel.
+- **arch mismatch**: your wheel must match `uname -m`.
+  ```bash
+  uname -m
+  ```
+- **python mismatch**: your wheel must match `python --version`.
+  ```bash
+  python --version
+  ```
+
+### build from source (optional)
+
+use a wheel unless you need a custom build.
 
 ```bash
-# Install build dependencies
 sudo apt-get install -y build-essential cmake libboost-all-dev
-
-# Clone and build
 git clone https://github.com/davisking/dlib.git
 cd dlib
 python setup.py build
 python setup.py install
 ```
 
-## Troubleshooting
+### how releases work
 
-### Import Errors
-If you encounter import errors after installation, ensure all runtime dependencies are installed on your system.
+tag the repo. ci builds wheels for all supported python versions and both arches, uploads artifacts, and attaches them to the release.
 
-### Architecture Mismatch
-Make sure you download the wheel matching your system architecture. Check your architecture with:
 ```bash
-uname -m
+git tag v19.24
+git push origin v19.24
 ```
 
-### Python Version Compatibility
-Verify your Python version matches the wheel:
-```bash
-python --version
-```
+### license
 
-## Contributing
+this project distributes dlib under its original license. see the dlib license for details: https://github.com/davisking/dlib/blob/master/dlib/LICENSE.txt
 
-This repository automatically builds wheels using GitHub Actions. To trigger a new build:
+### links
 
-1. Create a new tag: `git tag v19.24 && git push origin v19.24`
-2. The CI will automatically build and release wheels for all supported platforms
-
-## License
-
-This project distributes dlib under its original license. See the [dlib license](https://github.com/davisking/dlib/blob/master/dlib/LICENSE.txt) for details.
-
-## Links
-
-- [dlib Official Repository](https://github.com/davisking/dlib)
-- [dlib Documentation](http://dlib.net/)
-- [dlib Python Examples](https://github.com/davisking/dlib/tree/master/python_examples)
+- dlib repo: https://github.com/davisking/dlib
+- docs: http://dlib.net/
+- python examples: https://github.com/davisking/dlib/tree/master/python_examples
