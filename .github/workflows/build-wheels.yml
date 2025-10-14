@@ -39,7 +39,8 @@ jobs:
 
       - name: Clone dlib
         run: |
-          git clone --depth 1 --branch v19.24 https://github.com/davisking/dlib.git dlib_src
+          # Use master branch which has updated pybind11
+          git clone --depth 1 https://github.com/davisking/dlib.git dlib_src
 
       - name: Build wheel
         run: |
@@ -112,8 +113,8 @@ jobs:
               
               $PYBIN/pip install --upgrade pip wheel setuptools auditwheel
               
-              # Clone and build dlib
-              git clone --depth 1 --branch v19.24 https://github.com/davisking/dlib.git dlib_src
+              # Clone dlib master (has updated pybind11 for Python 3.11+)
+              git clone --depth 1 https://github.com/davisking/dlib.git dlib_src
               cd dlib_src
               
               # Build wheel
