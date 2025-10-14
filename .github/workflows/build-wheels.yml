@@ -46,12 +46,33 @@ jobs:
       - name: Build wheel
         run: |
           cd dlib_src
+          
+          # Debug info
+          echo "Python version:"
+          python --version
+          echo "CMake version:"
+          cmake --version
+          echo "Available tools:"
+          which cmake python pip
+          
           python setup.py bdist_wheel
+          
+          # Check if wheel was created
+          if [ ! -f dist/*.whl ]; then
+            echo "Wheel build failed - no wheel found in dist/"
+            ls -la dist/
+            exit 1
+          fi
 
       - name: Repair wheel (manylinux)
         run: |
           cd dlib_src
-          auditwheel repair dist/*.whl -w dist_repaired/ || cp dist/*.whl dist_repaired/
+          if [ -f dist/*.whl ]; then
+            auditwheel repair dist/*.whl -w dist_repaired/ || cp dist/*.whl dist_repaired/
+          else
+            echo "No wheel found to repair"
+            exit 1
+          fi
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -65,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12']
 
     steps:
       - name: Checkout repository
@@ -87,9 +108,12 @@ jobs:
               
               # Install system dependencies
               yum install -y \
-                cmake3 boost-devel openblas-devel lapack-devel \
+                cmake3 cmake boost-devel openblas-devel lapack-devel \
                 libX11-devel gtk3-devel \
-                libpng-devel libjpeg-devel libtiff-devel wget git
+                libpng-devel libjpeg-devel libtiff-devel wget git \
+                gcc gcc-c++ make \
+                ffmpeg-devel libv4l-devel x264-devel xvidcore-devel \
+                atlas-devel
               
               # Set up Python
               if [ \"\$PYTHON_VERSION\" = \"3.11\" ]; then
@@ -108,10 +132,31 @@ jobs:
               git clone https://github.com/davisking/dlib.git dlib_src
               cd dlib_src
               git checkout v19.24
+              
+              # Use cmake3 if available, otherwise cmake
+              CMAKE_CMD=cmake
+              if command -v cmake3 &> /dev/null; then
+                CMAKE_CMD=cmake3
+              fi
+              
+              # Set CMAKE_EXECUTABLE for dlib setup
+              export CMAKE_EXECUTABLE=\$CMAKE_CMD
+              
+              # Debug info
+              echo "Using CMake: \$CMAKE_CMD"
+              \$CMAKE_CMD --version
+              echo "Python executable: \$PYBIN/python"
+              \$PYBIN/python --version
+              
               \$PYBIN/python setup.py bdist_wheel
               
-              # Repair wheel
-              auditwheel repair dist/*.whl -w /workspace/dist_final/
+              # Repair wheel if it exists
+              if [ -f dist/*.whl ]; then
+                auditwheel repair dist/*.whl -w /workspace/dist_final/
+              else
+                echo "No wheel found to repair"
+                exit 1
+              fi
             "
 
       - name: Upload build artifact
