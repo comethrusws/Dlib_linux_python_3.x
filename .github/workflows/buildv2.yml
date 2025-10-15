@@ -1,4 +1,4 @@
-name: Build and Release dlib Wheels
+name: Build and Release dlib Wheels v2
 
 on:
   push:
