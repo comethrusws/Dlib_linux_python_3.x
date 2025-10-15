@@ -33,9 +33,8 @@ jobs:
           CIBW_BUILD: cp311-* cp312-*
           CIBW_ARCHS_LINUX: x86_64 aarch64
           CIBW_BEFORE_ALL_LINUX: >
-            yum install -y cmake3 boost-devel openblas-devel lapack-devel 
-            libX11-devel libpng-devel libjpeg-devel 
-            libtiff-devel atlas-devel gcc gcc-c++ make git
+            yum install -y cmake3 boost-devel openblas-devel 
+            lapack-devel git gcc gcc-c++ make
           CIBW_ENVIRONMENT: "CXXFLAGS='-O2 -g0'"
           
       - name: Upload artifacts
