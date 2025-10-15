@@ -30,7 +30,7 @@ pip install dlib-19.24-cp313-cp313-linux_x86_64.whl
 install directly from a release url:
 
 ```bash
-pip install https://github.com/comethrusws/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp312-cp312-linux_x86_64.whl
+pip install https://github.com/comethrusws/Dlib_linux_python_3.x/releases/download/manual-1/dlib-20.0.99-cp310-cp310-manylinux_2_39_x86_64.whl
 ```
 
 ### system requirements
