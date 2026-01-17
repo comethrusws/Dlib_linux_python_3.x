@@ -1,10 +1,25 @@
 # installation guide
 
-how to install prebuilt dlib wheels for linux.
+how to install prebuilt dlib wheels for linux and macOS.
 
 ## quick install
 
-### direct download from repo
+### macOS direct install
+
+```bash
+# automated installer (recommended)
+curl -sSL https://raw.githubusercontent.com/EqualByte/Dlib_linux_python_3.x/main/scripts/install_wheel_macos.sh | bash
+
+# or manual install for Intel Mac (x86_64)
+wget https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp312-cp312-macosx_10_9_x86_64.whl
+pip install dlib-19.24-cp312-cp312-macosx_10_9_x86_64.whl
+
+# or for Apple Silicon (arm64)
+wget https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download/v19.24/dlib-19.24-cp312-cp312-macosx_11_0_arm64.whl
+pip install dlib-19.24-cp312-cp312-macosx_11_0_arm64.whl
+```
+
+### linux direct install
 
 grab the python 3.12 wheel directly from the repo:
 
@@ -16,9 +31,9 @@ pip install dlib-19.24-cp312-cp312-linux_x86_64.whl
 # aarch64
 wget https://raw.githubusercontent.com/EqualByte/Dlib_linux_python_3.x/main/dlib-19.24-cp312-cp312-linux_aarch64.whl
 pip install dlib-19.24-cp312-cp312-linux_aarch64.whl
-````
+```
 
-### installation script
+### installation script (linux)
 
 use the automated installer:
 
@@ -37,14 +52,28 @@ pip install https://github.com/EqualByte/Dlib_linux_python_3.x/releases/download
 
 ## supported platforms
 
-| architecture | python versions | os    |
-| ------------ | --------------- | ----- |
-| x86_64       | 3.11 - 3.14     | linux |
-| aarch64      | 3.11 - 3.14     | linux |
+| OS    | Architecture          | Python Versions | Notes                       |
+| ----- | --------------------- | --------------- | --------------------------- |
+| Linux | x86_64                | 3.11 - 3.14     | manylinux2014 compatible    |
+| Linux | aarch64               | 3.11 - 3.14     | manylinux2014 compatible    |
+| macOS | x86_64 (Intel)        | 3.10 - 3.13     | macOS 10.9+                 |
+| macOS | arm64 (Apple Silicon) | 3.10 - 3.13     | macOS 11.0+, self-contained |
 
 ## system requirements
 
 make sure your system has the necessary dependencies.
+
+### macOS
+
+```bash
+# install homebrew if needed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# install dependencies (optional - wheels are self-contained)
+brew install cmake boost openblas
+```
+
+**Note:** macOS wheels include bundled dependencies, so additional installations are usually not required.
 
 ### ubuntu/debian
 
@@ -84,21 +113,29 @@ print("dlib installed successfully")
 
 ## troubleshooting
 
-* **import errors**: make sure system dependencies are installed, reinstall wheel if needed
-* **architecture mismatch**: check `uname -m` and download correct wheel
-* **python version mismatch**: check `python --version` matches the wheel
+- **import errors**: make sure system dependencies are installed, reinstall wheel if needed
+- **architecture mismatch**:
+  - Linux: check `uname -m` (x86_64 or aarch64)
+  - macOS: check `uname -m` (x86_64 for Intel, arm64 for Apple Silicon)
+  - Download the correct wheel for your architecture
+- **python version mismatch**: check `python --version` matches the wheel (cp310, cp311, cp312, cp313)
+- **platform mismatch**:
+  - macOS wheels have `macosx_*` in the filename
+  - Linux wheels have `linux_*` or `manylinux_*` in the filename
+  - Don't try to install a Linux wheel on macOS or vice versa
 
 common errors:
 
-* `no module named 'dlib'`: install system dependencies first
-* `importerror: libboost_python`: install boost development libraries
-* `undefined symbol`: wrong architecture, download correct wheel
+- `no module named 'dlib'`: install system dependencies first (Linux only)
+- `importerror: libboost_python`: install boost development libraries (Linux only)
+- `undefined symbol`: wrong architecture, download correct wheel
+- `is not a supported wheel on this platform`: downloaded wrong OS/architecture wheel
 
 ## examples
 
 see `examples/` for working demos:
 
-* `basic_face_detection.py` - simple face detection example
+- `basic_face_detection.py` - simple face detection example
 
 ## build from source
 
@@ -114,6 +151,6 @@ python setup.py install
 
 ## support
 
-* issues: [github issues](https://github.com/EqualByte/Dlib_linux_python_3.x/issues)
-* documentation: [dlib.net](http://dlib.net/)
-* original repo: [davisking/dlib](https://github.com/davisking/dlib)
+- issues: [github issues](https://github.com/EqualByte/Dlib_linux_python_3.x/issues)
+- documentation: [dlib.net](http://dlib.net/)
+- original repo: [davisking/dlib](https://github.com/davisking/dlib)
